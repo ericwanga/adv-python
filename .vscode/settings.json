@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "04 Collections"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}
