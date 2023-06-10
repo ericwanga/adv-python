@@ -6,7 +6,46 @@ from pathlib import Path
 from string import Template
 import itertools
 import collections
+import pandas as pd
 
+
+# List of all tables used in the original database
+TABLES = [
+    "addresses",
+    "birthdates",
+    "cities",
+    "countries",
+    "cuisines",
+    "districts",
+    "food",
+    "orders",
+    "promos",
+    "restaurants",
+    "states",
+    "users",
+]
+
+# Structure holding initial database
+# MultiDimDatabase = namedtuple(
+#     "MultiDimDatabase",
+#     [
+#         "addresses",
+#         "birthdates",
+#         "cities",
+#         "countries",
+#         "cuisines",
+#         "districts",
+#         "food",
+#         "orders",
+#         "promos",
+#         "restaurants",
+#         "states",
+#         "users",
+#     ],
+# )
+
+MultiDimDatabase = collections.namedtuple("MultiDimDatabase", TABLES)
+ReducedDatabase = collections.namedtuple("ReducedDatabase", ["orders", "users", "food", "promos", "restaurants", "addresses"])
 
 # prepare functions
 def filterFunc(x):
@@ -56,6 +95,35 @@ def CelsisusToFahrenheit(temp):
 
 def FahrenheitToCelsisus(temp):
     return (temp - 32) * 5/9
+
+# --- Task # 2 ---
+def reduce_dims(db: MultiDimDatabase) -> ReducedDatabase:
+    # # raise NotImplementedError()
+    # try:
+    #     red_db_orders = db.orders
+    #     red_db_users = pd.merge(db.users, db.birthdates, left_on='birthdate_id', right_index=True)
+    #     red_db_food = db.food.merge(db.cuisines, on='cuisine_id')
+    #     red_db_promos = db.promos
+    #     red_db_restaurants = db.restaurants
+    #     red_db_addresses = db.addresses.merge(db.districts,on='district_id').merge(db.cities,on='city_id').merge(db.states,on='state_id', suffixes=('_city', '_state')).merge(db.countries,on='country_id', suffixes=('_state', '_country'))
+    # except Exception as e:
+    #     print('ERROR:', e)
+
+    try:
+        ReducedDatabase.orders = db.orders
+        ReducedDatabase.users = pd.merge(db.users, db.birthdates, left_on='birthdate_id', right_index=True, how='left')
+        ReducedDatabase.food = db.food.merge(db.cuisines, left_on='cuisine_id', right_index=True, how='left')
+        ReducedDatabase.promos = db.promos
+        ReducedDatabase.restaurants = db.restaurants
+        ReducedDatabase.addresses = pd.merge(db.addresses, db.districts, left_on='district_id', right_index=True, how='left').\
+            merge(db.cities, left_on='city_id', right_index=True, suffixes=('_district', '_city'), how='left').\
+            merge(db.states, left_on='state_id', right_index=True, suffixes=('_city', '_state'), how='left').\
+            merge(db.countries, left_on='country_id', right_index=True, suffixes=('_state', '_country'), how='left')
+    except Exception as e:
+        print('ERROR:', e)
+    
+    # return collections.namedtuple('ReducedDatabase', [red_db_orders, red_db_users, red_db_food, red_db_promos, red_db_restaurants, red_db_addresses])
+    return ReducedDatabase
 
 
 def main():
@@ -229,18 +297,48 @@ def main():
 
     
     # collections --------------------------------------
-    # namedtuple
-    Point = collections.namedtuple("Point", "x y")
-    Table = collections.namedtuple("DimDatabase", ['addresses', 'birthdates'])
+    # basic collections
+    # list, tuple, set, dictionary
 
+    # advanced collections
+    # namedtuple                   Tuple with named fields
+    # OrderedDict, defaultdict     Dictionaries with special properties
+    # Counter                      Counts distinct values
+    # deque                        Double-ended list object
+
+    # namedtuple
+    # example 1
+    Point = collections.namedtuple("Point", "x y")
     p1 = Point(10, 20)
     p2 = Point(30, 40)
-
+    
     print(p1, p2)
     print(p1.x, p1.y)
 
     p1 = p1._replace(x=100)
     print(p1)
+    
+    # example 2
+    # MultiDimDatabase = collections.namedtuple("MultiDimDatabase", TABLES)
+    
+    tables = [pd.read_csv(Path('tables/' + t + '.csv'), index_col=0) for t in TABLES]
+
+    # db1 = MultiDimDatabase(tables[0], tables[1], tables[2], tables[3], tables[4], tables[5])
+    db1 = MultiDimDatabase(*tables)
+    print(db1.addresses)
+    print(db1.cities)
+    print(db1.countries)
+    print(db1.states)
+    print(db1.users)
+    print(db1.birthdates)
+    # print(db1.users.info())
+
+    db2 = reduce_dims(db1)
+    print(db2.users)
+    print(db2.food)
+    print(db2.addresses)
+
+
 
 
 
