@@ -1,5 +1,4 @@
-# my codes of advanced python coding for those I don't know
-# as app structure + debugging, not in notebook cells
+# some advanced python functions
 # 2023-06-09
 
 from pathlib import Path
@@ -9,7 +8,7 @@ import collections
 import pandas as pd
 
 
-# List of all tables used in the original database
+# list of all tables used in the original database
 TABLES = [
     "addresses",
     "birthdates",
@@ -25,25 +24,7 @@ TABLES = [
     "users",
 ]
 
-# Structure holding initial database
-# MultiDimDatabase = namedtuple(
-#     "MultiDimDatabase",
-#     [
-#         "addresses",
-#         "birthdates",
-#         "cities",
-#         "countries",
-#         "cuisines",
-#         "districts",
-#         "food",
-#         "orders",
-#         "promos",
-#         "restaurants",
-#         "states",
-#         "users",
-#     ],
-# )
-
+# structure holding initial database
 MultiDimDatabase = collections.namedtuple("MultiDimDatabase", TABLES)
 ReducedDatabase = collections.namedtuple("ReducedDatabase", ["orders", "users", "food", "promos", "restaurants", "addresses"])
 
@@ -306,7 +287,7 @@ def main():
     # Counter                      Counts distinct values
     # deque                        Double-ended list object
 
-    # namedtuple
+    # namedtuple!!
     # example 1
     Point = collections.namedtuple("Point", "x y")
     p1 = Point(10, 20)
@@ -319,8 +300,6 @@ def main():
     print(p1)
     
     # example 2
-    # MultiDimDatabase = collections.namedtuple("MultiDimDatabase", TABLES)
-    
     tables = [pd.read_csv(Path('tables/' + t + '.csv'), index_col=0) for t in TABLES]
 
     # db1 = MultiDimDatabase(tables[0], tables[1], tables[2], tables[3], tables[4], tables[5])
