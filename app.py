@@ -3,6 +3,8 @@
 
 from pathlib import Path
 from string import Template
+from typing import List
+import glob
 import itertools
 import collections
 import pandas as pd
@@ -77,6 +79,16 @@ def CelsisusToFahrenheit(temp):
 def FahrenheitToCelsisus(temp):
     return (temp - 32) * 5/9
 
+# --- Task #1 ---
+def load_tables(tables_dir_path: Path, tables: List[str]) -> List[pd.DataFrame]:
+    try:
+        files = [e for e in tables_dir_path.glob('**/*.csv') if (e.name.split('.')[0] in tables)]
+        # print(*files)
+        dfs = [pd.read_csv(f, index_col=0) for f in files]
+        return dfs
+    except Exception as e:
+        print('ERROR:', e)
+
 # --- Task # 2 ---
 def reduce_dims(db: MultiDimDatabase) -> ReducedDatabase:
     # # raise NotImplementedError()
@@ -93,7 +105,7 @@ def reduce_dims(db: MultiDimDatabase) -> ReducedDatabase:
     try:
         ReducedDatabase.orders = db.orders
         ReducedDatabase.users = pd.merge(db.users, db.birthdates, left_on='birthdate_id', right_index=True, how='left')
-        ReducedDatabase.food = db.food.merge(db.cuisines, left_on='cuisine_id', right_index=True, how='left')
+        ReducedDatabase.food = pd.merge(db.food, db.cuisines, left_on='cuisine_id', right_index=True, how='left')
         ReducedDatabase.promos = db.promos
         ReducedDatabase.restaurants = db.restaurants
         ReducedDatabase.addresses = pd.merge(db.addresses, db.districts, left_on='district_id', right_index=True, how='left').\
@@ -300,7 +312,9 @@ def main():
     print(p1)
     
     # example 2
-    tables = [pd.read_csv(Path('tables/' + t + '.csv'), index_col=0) for t in TABLES]
+    # tables = [pd.read_csv(Path('tables/' + t + '.csv'), index_col=0) for t in TABLES]
+    tables_dir_path = Path('tables')
+    tables = load_tables(tables_dir_path=tables_dir_path, tables=TABLES)
 
     # db1 = MultiDimDatabase(tables[0], tables[1], tables[2], tables[3], tables[4], tables[5])
     db1 = MultiDimDatabase(*tables)
