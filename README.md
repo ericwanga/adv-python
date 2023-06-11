@@ -7,3 +7,7 @@
 - iter
 - itertools
 - transforms
+- defaultdict
+- OrderedDict
+- deque
+- advanced class and object

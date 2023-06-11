@@ -2,11 +2,13 @@
 # 2023-06-09
 
 from pathlib import Path
+import string
 from string import Template
 from typing import List
 import glob
 import itertools
 import collections
+# from collections import namedtuple, defaultdict, Counter, OrderedDict, deque
 import pandas as pd
 
 
@@ -289,11 +291,11 @@ def main():
     print(list(map(lambda t: (t * 9/5) + 32, ctemps)))
 
     
-    # collections --------------------------------------
+    # collections --------------------------------------------------------
     # basic collections
     # list, tuple, set, dictionary
 
-    # advanced collections
+    # advanced collections -----------
     # namedtuple                   Tuple with named fields
     # OrderedDict, defaultdict     Dictionaries with special properties
     # Counter                      Counts distinct values
@@ -332,13 +334,108 @@ def main():
     print(db2.addresses)
 
 
+    # defaultdict ------------
+    # data
+    fruits = ['apple', 'pear', 'orange', 'banana',
+                'apple', 'grape', 'banana', 'banana']
+
+    # dictionary to count fruits
+    # fruitCounter = {}
+
+    # for fruit in fruits:
+    #     if fruit in fruitCounter.keys():
+    #         fruitCounter[fruit] += 1
+    #     else:
+    #         fruitCounter[fruit] = 0
+
+    # for k, v in fruitCounter.items():
+    #     print(k + ': ' + str(v))
 
 
+    # defaultdict to count fruits
+    fruitCounter = collections.defaultdict(int) # default items to 0 (because int)
+    # fruitCounter = collections.defaultdict(lambda: 100) # default starting from 100
+
+    for fruit in fruits:
+        fruitCounter[fruit] += 1 # no need to sepecify default value
+
+    for k, v in fruitCounter.items():
+        print(k + ': ' + str(v))
 
 
+    # counter ------------
+    # data
+    class1 = ["Bob", "James", "Chad", "Darcy", "Penny", "Hannah"
+              "Kevin", "James", "Melanie", "Becky", "Steve", "Frank"]
+    class2 = ["Bill", "Barry", "Cindy", "Debbie", "Frank",
+              "Gabby", "Kelly", "James", "Joe", "Sam", "Tara", "Ziggy"]
+
+    c1 = collections.Counter(class1)
+    c2 = collections.Counter(class2)
+
+    print(c1['James'], 'students called James') # how many James
+
+    print(sum(c1.values()), 'students in class 1') # how many studnets
+
+    c1.update(class2) # combine the two classes
+    print(sum(c1.values()), 'students in class 1')
+
+    print(c1.most_common(3)) # 3 most common names
+
+    c1.subtract(class2) # subtract one class out
+    print(c1.most_common(3))
+
+    print(c1 & c2) # common in two counters
 
 
+    # ordereddict ------------
+    # data (win, lost)
+    sportTeams = [("Royals", (18, 12)), ("Rockets", (24, 6)), 
+                ("Cardinals", (20, 10)), ("Dragons", (22, 8)),
+                ("Kings", (15, 15)), ("Chargers", (20, 10)), 
+                ("Jets", (16, 14)), ("Warriors", (25, 5))]
 
+    sortedTeams = sorted(sportTeams, key=lambda t: t[1][0], reverse=True) # sort by number of wins
+
+    teams = collections.OrderedDict(sortedTeams) # ordered dictionary
+    print(teams)
+
+    tm, wl = teams.popitem(False) # pop item to get the top 1
+    print('Top team:', tm, wl)
+
+    for i, t in enumerate(teams, start=1): # next top 4 teams
+        print(i, t)
+        if i == 4:
+            break
+
+    d1 = collections.OrderedDict({'a':1, 'b': 2, 'c':3})
+    d2 = collections.OrderedDict({'a':1, 'b': 2, 'c':3})
+    d3 = collections.OrderedDict({'a':1, 'c':3, 'b': 2})
+    d4 = {'a':1, 'c':3, 'b': 2}
+    print(d1 == d2) # equality test: True - exactly same - items and order must be same
+    print(d1 == d4) # equality test: True - order does not matter
+    print(d2 == d4) # equality test: True - order does not matter
+    print(d3 == d4) # equality test: True - order does not matter
+    print(d1 == d3) # equality test: False - order matters!
+    print(d2 == d3) # equality test: False - order matters!
+
+
+    # Deque (double-ended queue) ----------
+    # data
+    d = collections.deque(string.ascii_lowercase)
+
+    print('Item count:', str(len(d)))
+    for elem in d:
+        print(elem.upper(), end=',')
+
+    d.pop()
+    d.popleft()
+    d.append(2)
+    d.appendleft(1)
+
+    print(d)
+    d.rotate(1)
+    print(d)
 
 
 if __name__ == '__main__':
