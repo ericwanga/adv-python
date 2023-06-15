@@ -135,7 +135,7 @@ def myCustomLogFunction():
 
 def main():
 
-    # string functions ---------------------------------------
+    # string functions ----------------------------------------------------------
     # data
     byt = bytes([0x41, 0x42, 0x43, 0x44])
     st = 'This is a string'
@@ -164,7 +164,7 @@ def main():
     print(str3)
 
 
-    # python built-in utilities -----------------------------
+    # python built-in utilities ------------------------------------------------------
     # data
     list1 = [1,2,3,0,5,6] 
     
@@ -213,7 +213,7 @@ def main():
         print(i, m[0], '=', m[1], 'in French')
 
 
-    # transforms -------------------------------------
+    # transforms ----------------------------------------------------------------
     # data
     nums = (1, 8, 4, 5, 13, 26, 381, 410, 58, 47)
     chars = "abcDeFGHiJklmnoP"
@@ -303,7 +303,7 @@ def main():
     print(list(map(lambda t: (t * 9/5) + 32, ctemps)))
 
     
-    # collections --------------------------------------------------------
+    # collections ------------------------------------------------------------------------
     # basic collections
     # list, tuple, set, dictionary
 
@@ -451,7 +451,12 @@ def main():
 
 
 
-    # logging ----------------------------------
+    # advanced classes and objects ----------------------------------------
+    # see file "app_classes_objects.py"
+
+
+
+    # logging -------------------------------------------------------------
     # basic Config
     # logging.basicConfig(level=logging.DEBUG) # log messages to terminal
 
@@ -480,7 +485,7 @@ def main():
     
 
 
-    # Comprehensions -------- “推导式” --------------------------
+    # Comprehensions -------- “推导式” ------------------------------------
     # data
     evens = [2,4,6,8,10,12,14,16,18,20]
     odds = [1,3,5,7,9,11,13,15,17,19]
