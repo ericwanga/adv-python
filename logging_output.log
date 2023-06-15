@@ -1,0 +1,7 @@
+User:ewang Namespace:dev 15/06/2023 12:01:05 PM: DEBUG: main: Line:469 Debug message
+User:ewang Namespace:dev 15/06/2023 12:01:05 PM: INFO: main: Line:470 Info message
+User:ewang Namespace:dev 15/06/2023 12:01:05 PM: WARNING: main: Line:471 Warning message
+User:ewang Namespace:dev 15/06/2023 12:01:05 PM: ERROR: main: Line:472 Error message
+User:ewang Namespace:dev 15/06/2023 12:01:05 PM: CRITICAL: main: Line:473 Critical message
+User:ewang Namespace:dev 15/06/2023 12:01:05 PM: INFO: main: Line:476 logging funtion was run: 2023-06-15 12:01:05.975440
+User:ewang Namespace:dev 15/06/2023 12:01:05 PM: DEBUG: myCustomLogFunction: Line:133 This is a debug-level message

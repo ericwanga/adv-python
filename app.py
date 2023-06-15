@@ -11,6 +11,8 @@ import collections
 # from collections import namedtuple, defaultdict, Counter, OrderedDict, deque
 import pandas as pd
 
+import logging
+from datetime import datetime
 
 # list of all tables used in the original database
 TABLES = [
@@ -31,6 +33,13 @@ TABLES = [
 # structure holding initial database
 MultiDimDatabase = collections.namedtuple("MultiDimDatabase", TABLES)
 ReducedDatabase = collections.namedtuple("ReducedDatabase", ["orders", "users", "food", "promos", "restaurants", "addresses"])
+
+# some useful extra data to put in logging
+extraLogData = {
+    'user': 'ewang',
+    'namespace': 'dev'
+}
+
 
 # prepare functions
 def filterFunc(x):
@@ -119,6 +128,9 @@ def reduce_dims(db: MultiDimDatabase) -> ReducedDatabase:
     
     # return collections.namedtuple('ReducedDatabase', [red_db_orders, red_db_users, red_db_food, red_db_promos, red_db_restaurants, red_db_addresses])
     return ReducedDatabase
+
+def myCustomLogFunction():
+    logging.debug('This is a debug-level message', extra=extraLogData)
 
 
 def main():
@@ -436,6 +448,76 @@ def main():
     print(d)
     d.rotate(1)
     print(d)
+
+
+
+    # logging ----------------------------------
+    # basic Config
+    # logging.basicConfig(level=logging.DEBUG) # log messages to terminal
+
+    # basic Config + custom formatting + extra data from dict
+    fmtstr = "User:%(user)s Namespace:%(namespace)s %(asctime)s: %(levelname)s: %(funcName)s: Line:%(lineno)d %(message)s"
+    datestr = "%d/%m/%Y %I:%M:%S %p"
+
+    logging.basicConfig(level=logging.DEBUG # default appending logs
+                    , filename='logging_output.log' # logs to file
+                    , filemode='w' # change to overwrite mode
+                    , format=fmtstr # add custom formatting to display details
+                    , datefmt=datestr
+                    ) 
+
+    logging.debug('Debug message', extra=extraLogData) # without basicConfig(level), won't be printed
+    logging.info('Info message', extra=extraLogData) # without basicConfig(level), won't be printed
+    logging.warning('Warning message', extra=extraLogData)
+    logging.error('Error message', extra=extraLogData)
+    logging.critical('Critical message', extra=extraLogData)
+
+    # formatted strings to logs
+    logging.info('{} funtion was run: {}'.format('logging', datetime.now()), extra=extraLogData)
+
+    # add custom logging function
+    myCustomLogFunction()
+    
+
+
+    # Comprehensions -------- “推导式” --------------------------
+    # data
+    evens = [2,4,6,8,10,12,14,16,18,20]
+    odds = [1,3,5,7,9,11,13,15,17,19]
+    ctemps = [0,5,10,12,23,34,12,24,12,18,29,100]
+    team1 = {'Jones': 24, 'Jameson': 18, 'Smith': 58, 'Burns': 7}
+    team2 = {'White': 12, 'Macke': 88, 'Perce': 4}
+
+    # using map and filter
+    evenSquared = list(map(lambda e: e**2, evens))
+    evenSquared_f = list(map(lambda e: e**2, filter(lambda e: e>4 and e<16, evens)))
+    print(evenSquared)
+    print(evenSquared_f)
+
+    # use list comprehension
+    evenSquared = [e**2 for e in evens]
+    evenSquared_f = [e**2 for e in evens if e>4 and e<16]
+    print(evenSquared)
+    print(evenSquared_f)
+
+    # use dictionary comprehension
+    tempDict = {t: (t*9/5)+32 for t in ctemps if t<100}
+    print(tempDict)
+    print(tempDict[12])
+
+    newTeam = {k:v for team in (team1, team2) for k,v in team.items()} # join 2 teams together
+    print(newTeam)
+
+    ftemps1 = [(t*9/5)+32 for t in ctemps] # list - with duplicates
+    ftemps2 = {(t*9/5)+32 for t in ctemps} # set - no duplicates!
+    print(ftemps1)
+    print(ftemps2) # no duplicates
+
+    sTemp = 'The quick brown fox jumped over the lazy dog.'
+    chars = {c.upper() for c in sTemp}
+    chars_f = {c.upper() for c in sTemp if not c.isspace()}
+    print(chars)
+    print(chars_f)
 
 
 if __name__ == '__main__':
