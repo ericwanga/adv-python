@@ -11,3 +11,5 @@
 - OrderedDict
 - deque
 - advanced class and object
+- logging
+- comprehensions
